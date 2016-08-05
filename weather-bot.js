@@ -41,10 +41,10 @@ app.post('/webhook/', function (req, res) {
                 text = event.message.text;
 
                 // write your code here
-                
-                city = "delhi"
 
-                http.get('http://api.openweathermap.org/data/2.5/weather?q='+ city +'&type=like&mode=json&APPID=e59499e71cae5e8de2730b3f21b5123d',
+                console.log("City: "+text);
+
+                http.get('http://api.openweathermap.org/data/2.5/weather?q='+ text +'&type=like&mode=json&APPID=e59499e71cae5e8de2730b3f21b5123d',
                           function(res) {
                     console.log("Got response: " + res.statusCode);
 
@@ -52,9 +52,9 @@ app.post('/webhook/', function (req, res) {
                         json = JSON.parse(chunk);
                         console.log(json);
                         messageData = {
-                            text: "City:"+ city + "\n" +
+                            text: "City:"+ json.name + "\n" +
                             "Weather:" + json.weather[0].main + "\n" +
-                            "Temperature:" + json.main.temp + "K\n"+
+                            "Temperature:" + (parseInt(json.main.temp)- 273.15).toFixed(0) + "ºC\n"+
                             "Humidity:" + json.main.humidity + "%\n"
                         };
                         apiInstance.send(sender, pageToken, messageData);
