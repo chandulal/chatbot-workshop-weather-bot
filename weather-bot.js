@@ -51,13 +51,21 @@ app.post('/webhook/', function (req, res) {
                     res.on("data", function(chunk) {
                         json = JSON.parse(chunk);
                         console.log(json);
-                        messageData = {
-                            text: "City:"+ json.name + "\n" +
-                            "Weather:" + json.weather[0].main + "\n" +
-                            "Temperature:" + (parseInt(json.main.temp)- 273.15).toFixed(0) + "ºC\n"+
-                            "Humidity:" + json.main.humidity + "%\n"
-                        };
-                        apiInstance.send(sender, pageToken, messageData);
+                        if(json.weather !=null) {
+                            messageData = {
+                                text: "City:" + json.name + "\n" +
+                                "Weather:" + json.weather[0].main + "\n" +
+                                "Temperature:" + (parseInt(json.main.temp) - 273.15).toFixed(0) + "ºC\n" +
+                                "Humidity:" + json.main.humidity + "%\n"
+                            };
+                            apiInstance.send(sender, pageToken, messageData);
+                        }
+                        else {
+                            messageData = {
+                                text:"City Not Found!"
+                            };
+                            apiInstance.send(sender, pageToken, messageData);
+                        }
                     });
                 }).on('error', function(e) {
                     console.log("Got error: " + e.message);
